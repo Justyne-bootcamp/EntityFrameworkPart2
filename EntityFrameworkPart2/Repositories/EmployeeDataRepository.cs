@@ -35,8 +35,9 @@ namespace EntityFrameworkPart2.Repositories
             }
             return employee;
         }
-        public void GetEmployeeData(string employeeCode)
-        {            
+        public EmployeeData GetEmployeeData(string employeeCode)
+        {
+            EmployeeData employeeData = new EmployeeData();
             var employee = Context.Employees
             .Join(Context.Positions,
             e => e.CCurrentPosition,
@@ -46,50 +47,38 @@ namespace EntityFrameworkPart2.Repositories
                 EmployeeCode = e.CEmployeeCode,
                 EmployeeFirstName = e.VFirstName,
                 EmployeeLastName = e.VLastName,
+                EmployeeBirthday = e.DBirthDate,
                 EmployeePosition = p.VDescription
             })
             .Where(e => e.EmployeeCode.Equals(employeeCode))
             .FirstOrDefault();
+            employeeData.EmployeeCode = employee.EmployeeCode;
+            employeeData.FirstName = employee.EmployeeFirstName;
+            employeeData.LastName = employee.EmployeeLastName;
+            employeeData.Birthday = (DateTime)employee.EmployeeBirthday;
+            employeeData.Position = employee.EmployeePosition;
 
-            if (employee is object)
-            {
-                Console.WriteLine($"employee code: {employee.EmployeeCode}");
-                Console.WriteLine($"employee name: {employee.EmployeeFirstName} {employee.EmployeeLastName}");
-                Console.WriteLine($"position: {employee.EmployeePosition}");
-
-            }
-            else
-            {
-                Console.WriteLine("employee not found");
-            }
+            return employeeData;
         }
-        public void GetMonthlySalary(string employeeCode)
+        public List<MonthlySalary> GetMonthlySalary(string employeeCode)
         {
             var monthlySalaries = Context.MonthlySalaries
                 .Select(e => e)
                 .Where(e => e.CEmployeeCode.Equals(employeeCode))
                 .ToList();
 
-            Console.WriteLine("\nMonthly Salary\n");
-            foreach (var salary in monthlySalaries)
-            {
-                Console.WriteLine(salary.MMonthlySalary);
-            }
+            return monthlySalaries;
         }
-        public void GetAnnualSalary(string employeeCode)
+        public List<AnnualSalary> GetAnnualSalary(string employeeCode)
         {
             var annualSalaries = Context.AnnualSalaries
                 .Select(e => e)
                 .Where(e => e.CEmployeeCode.Equals(employeeCode))
                 .ToList();
 
-            Console.WriteLine("\nAnnual Salary\n");
-            foreach (var salary in annualSalaries)
-            {
-                Console.WriteLine(salary.MAnnualSalary);
-            }
+            return annualSalaries;
         }
-        public void GetEmployeeSkills(string employeeCode)
+        public List<string> GetEmployeeSkills(string employeeCode)
         {
             var skills = Context.EmployeeSkills
                 .Join(Context.Skills,
@@ -103,12 +92,14 @@ namespace EntityFrameworkPart2.Repositories
                 })
                 .Where(e => e.EmployeeCode.Equals(employeeCode))
                 .ToList();
-
-            Console.WriteLine("\nSkills\n");
+            
+            List<string> skillList = new List<string>();
             foreach (var skill in skills)
             {
-                Console.WriteLine(skill.Skill);
+                skillList.Add(skill.Skill);
             }
+
+            return skillList;
         }
     }
 }

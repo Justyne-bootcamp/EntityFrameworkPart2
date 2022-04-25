@@ -10,10 +10,8 @@ namespace EntityFrameworkPart2.Models
         public string EmployeeCode { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public DateTime Birthday { get; set; }
         public string Position { get; set; }
-        public List<decimal> MonthlySalaries { get; set; }
-        public List<decimal> AnnualSalaries { get; set; }
-        public List<string> Skills { get; set; }
 
     }
 }

@@ -28,6 +28,7 @@ namespace EntityFrameworkPart2
         public T GetProperty<T>(string propertyName)
         {
             return Configuration.GetValue<T>(propertyName);
+
         }
     }
 }
